@@ -24,7 +24,7 @@ export default function MovieCard({ movie, viewMode = 'grid' }) {
 
   if (viewMode === 'list') {
     return (
-      <Link href={`/movies/${movie.id}`} className="group">
+      <Link href={`/${movie.type || 'movies'}/${movie.id}`} className="group">
         <div className="flex bg-gray-800 rounded-lg overflow-hidden transition-transform group-hover:scale-105 group-hover:shadow-2xl">
           <div className="relative w-24 h-36 flex-shrink-0">
             <img
@@ -54,7 +54,7 @@ export default function MovieCard({ movie, viewMode = 'grid' }) {
   }
 
   return (
-    <Link href={`/movies/${movie.id}`} className="group">
+    <Link href={`/${movie.type || 'movies'}/${movie.id}`} className="group">
       <div className="bg-gray-800 rounded-lg overflow-hidden transition-transform group-hover:scale-105 group-hover:shadow-2xl">
         <div className="relative aspect-[2/3]">
           <img

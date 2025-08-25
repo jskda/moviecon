@@ -5,10 +5,11 @@ import { useMovie } from '@/hooks/useApi'
 import Player from '@/components/Player'
 import LoadingSpinner from '@/components/LoadingSpinner'
 import { getPosterUrl, getBackdropUrl } from '@/utils/images'
+import { Star } from 'lucide-react'
 
 export default function MovieDetailPage() {
   const params = useParams()
-  const { data: movie, isLoading, error } = useMovie(params.id)
+  const { data: movie, isLoading } = useMovie(params.id)
 
   const getYear = (dateString) => {
     if (!dateString) return 'Неизвестно'
@@ -24,13 +25,15 @@ export default function MovieDetailPage() {
     return <LoadingSpinner />
   }
 
-  console.log('Movie data for player:', {
-    requested_id: params.id,
-    found_id: movie?.id,
-    title: movie?.ru_title,
-    kinopoisk_id: movie?.kinopoisk_id,
-    imdb_id: movie?.imdb_id,
-  })
+  if (!movie) {
+    return (
+      <div className="container mx-auto px-4 py-8 text-center">
+        <h1 className="text-2xl font-bold">Фильм не найден</h1>
+      </div>
+    )
+  }
+
+  console.log('Movie detail data:', movie)
 
   return (
     <div className="min-h-screen bg-gray-900">
@@ -43,10 +46,10 @@ export default function MovieDetailPage() {
       >
         <div className="container mx-auto px-4 pt-32">
           <h1 className="text-4xl md:text-6xl font-bold text-white">
-            {movie?.ru_title || movie?.title || 'Неизвестный фильм'}
+            {movie.ru_title || movie.title}
           </h1>
           <p className="text-xl text-gray-300 mt-2">
-            {movie?.title && movie.title !== movie.ru_title ? movie.title : ''}
+            {movie.title && movie.title !== movie.ru_title ? movie.title : ''}
           </p>
         </div>
       </div>
@@ -57,16 +60,17 @@ export default function MovieDetailPage() {
             <div className="bg-gray-800 rounded-lg p-6">
               <h2 className="text-2xl font-bold mb-4">Плеер</h2>
               <Player 
-                contentId={movie.id}
+                contentId={movie.id} 
                 contentType="movie"
                 translationId={movie.translations?.[0]?.id}
+                iframeSrc={movie.iframe_src}
               />
             </div>
 
             <div className="bg-gray-800 rounded-lg p-6 mt-6">
               <h2 className="text-2xl font-bold mb-4">Описание</h2>
               <p className="text-gray-300">
-                {movie?.description || 'Описание фильма отсутствует.'}
+                {movie.description || 'Описание фильма отсутствует.'}
               </p>
             </div>
           </div>
@@ -76,20 +80,23 @@ export default function MovieDetailPage() {
               <h2 className="text-2xl font-bold mb-4">Информация</h2>
               <div className="space-y-3">
                 <div className="flex justify-between">
-                  <span className="text-gray-400">ID в системе:</span>
-                  <span>{movie?.id || 'Неизвестно'}</span>
+                  <span className="text-gray-400">Год:</span>
+                  <span>{getYear(movie.year || movie.released)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-400">Год:</span>
-                  <span>{getYear(movie?.year || movie?.released)}</span>
+                  <span className="text-gray-400">Рейтинг:</span>
+                  <span className="flex items-center">
+                    <Star className="h-4 w-4 text-yellow-400 mr-1" />
+                    {movie.rating || '7.5'}/10
+                  </span>
                 </div>
-                {movie?.kinopoisk_id && (
+                {movie.kinopoisk_id && (
                   <div className="flex justify-between">
                     <span className="text-gray-400">КиноПоиск ID:</span>
                     <span>{movie.kinopoisk_id}</span>
                   </div>
                 )}
-                {movie?.imdb_id && (
+                {movie.imdb_id && (
                   <div className="flex justify-between">
                     <span className="text-gray-400">IMDb ID:</span>
                     <span>{movie.imdb_id}</span>
@@ -102,8 +109,11 @@ export default function MovieDetailPage() {
               <h2 className="text-2xl font-bold mb-4">Постер</h2>
               <img
                 src={getPosterUrl(movie)}
-                alt={movie?.ru_title || movie?.title || 'Movie'}
+                alt={movie.ru_title || movie.title}
                 className="w-full rounded-lg"
+                onError={(e) => {
+                  e.target.src = 'https://via.placeholder.com/300x450/2d2d2d/ffffff?text=No+Image'
+                }}
               />
             </div>
           </div>
