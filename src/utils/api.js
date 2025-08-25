@@ -8,71 +8,54 @@ const api = axios.create({
   timeout: 10000,
 })
 
-// Базовый метод для всех запросов
-const makeApiRequest = (endpoint, params = {}) => {
-  // Всегда добавляем api_token первым параметром
-  const queryParams = new URLSearchParams()
-  queryParams.append('api_token', API_TOKEN)
-  
-  // Добавляем остальные параметры
-  Object.entries(params).forEach(([key, value]) => {
-    if (value !== undefined && value !== null) {
-      queryParams.append(key, value)
-    }
-  })
-  
-  const url = `${endpoint}?${queryParams.toString()}`
-  console.log('API Request:', url)
-  
-  return api.get(url)
-}
+// Интерцептор для добавления API токена
+api.interceptors.request.use((config) => {
+  config.params = {
+    ...config.params,
+    api_token: API_TOKEN
+  }
+  return config
+})
 
 // Методы API
 export const movieApi = {
-  // Поиск фильмов через /short endpoint - ОСНОВНОЙ МЕТОД!
-  searchMovies: (params = {}) =>
-    makeApiRequest('/short', params)
-      .then(res => {
-        console.log('Search API response:', res.data)
-        return res.data
-      }),
-
-  // Получить список фильмов через /movies
-  getMovies: (params = {}) =>
-    makeApiRequest('/movies', params)
+  // Получить список фильмов
+  getMovies: (params = {}) => 
+    api.get('/movies', { params })
       .then(res => {
         console.log('Movies API response:', res.data)
         return res.data
       }),
 
-  // Специализированные методы поиска
-  searchByKinopoiskId: (kinopoiskId) =>
-    makeApiRequest('/short', { kinopoisk_id: kinopoiskId })
+  // Получить конкретный фильм по ID - ПРАВИЛЬНАЯ реализация
+  getMovie: (id) => 
+    api.get('/movies', { params: { id } })
       .then(res => {
-        console.log('Search by Kinopoisk ID response:', res.data)
-        return res.data
+        console.log('Movie API response for ID', id, ':', res.data)
+        
+        if (res.data.data && Array.isArray(res.data.data)) {
+          // Ищем фильм с конкретным ID в массиве
+          const foundMovie = res.data.data.find(movie => movie.id == id)
+          
+          if (foundMovie) {
+            console.log('Found movie with ID', id, ':', foundMovie)
+            return foundMovie
+          } else {
+            console.log('Movie with ID', id, 'not found in response array')
+            // Покажем какие ID есть в ответе для отладки
+            const availableIds = res.data.data.map(m => m.id)
+            console.log('Available IDs in response:', availableIds)
+            throw new Error(`Movie with ID ${id} not found. Available IDs: ${availableIds.join(', ')}`)
+          }
+        }
+        
+        throw new Error('Invalid API response format')
       }),
 
-  searchByImdbId: (imdbId) =>
-    makeApiRequest('/short', { imdb_id: imdbId })
-      .then(res => {
-        console.log('Search by IMDB ID response:', res.data)
-        return res.data
-      }),
-
-  searchByTitle: (title) =>
-    makeApiRequest('/short', { title })
-      .then(res => {
-        console.log('Search by title response:', res.data)
-        return res.data
-      }),
-
-  searchById: (id) =>
-    makeApiRequest('/short', { id })
-      .then(res => {
-        console.log('Search by ID response:', res.data)
-        return res.data
-      })
+  // Поиск фильмов
+  searchMovies: (query) => 
+    api.get('/short', { params: { query } })
+      .then(res => res.data)
 }
 
 export default api

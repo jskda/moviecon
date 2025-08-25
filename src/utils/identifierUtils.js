@@ -22,9 +22,12 @@ export const identifyType = (identifier) => {
 }
 
 // Получить URL для поиска
-export const getSearchUrl = (identifier, type) => {
-  const baseUrl = 'https://portal.lumex.host/api/movies'
-  const token = 'mCSbTETUoTFAUzpOBa4Cx156dGkVHK5F'
+const API_BASE = '/api/lx'
+
+export const generateApiUrl = (endpoint, params = {}) => {
+  const queryParams = new URLSearchParams(params)
+  return `${API_BASE}${endpoint}?${queryParams.toString()}`
+}
   
   switch (type) {
     case 'kinopoisk_id':
