@@ -1,36 +1,77 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🎬 Moviecon - Онлайн-кинотеатр
 
-## Getting Started
+[![Next.js](https://img.shields.io/badge/Next.js-14.0.4-000000?logo=next.js&logoColor=white)](https://nextjs.org/)
+[![Javascript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=JavaScript&logoColor=000&style=flat-square)](https://www.javascript.com/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.3.6-%2338B2AC?logo=tailwind-css)](https://tailwindcss.com/)
+[![The Movie Database](https://img.shields.io/badge/TMDB-API-%2301B4E4?logo=the-movie-database)](https://www.themoviedb.org/)
 
-First, run the development server:
+**Moviecon** — это современное и отзывчивое веб-приложение (онлайн-кинотеатр), построенное на актуальном стеке технологий. Пользователи могут открывать для себя новые фильмы, искать их по названию, просматривать детальную информацию и наслаждаться встроенными трейлерами.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## ✨ Возможности
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+*   **Главная страница:** Сетка популярных фильмов с пагинацией.
+*   **Поиск:** Мгновенный поиск фильмов по базе TMDB.
+*   **Страница фильма:** Детальная информация о фильме: описание, рейтинг, жанры, актерский состав, бюджет, сборы и многое другое.
+*   **Встроенные трейлеры:** Просмотр официальных трейлеров с YouTube прямо на сайте.
+*   **Адаптивный дизайн:** Идеальное отображение на всех устройствах — от мобильных телефонов до десктопов.
+*   **Современный UI:** Чистый и интуитивно понятный интерфейс, созданный с помощью Tailwind CSS.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## 🚀 Технологический стек
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Этот проект демонстрирует мои навыки работы с современным Fullstack-стеком:
 
-## Learn More
+*   **Фреймворк:** [Next.js 14](https://nextjs.org/) (App Router)
+*   **Язык:** [Javascript](https://www.javascript.com/)
+*   **Стилизация:** [Tailwind CSS](https://tailwindcss.com/)
+*   **API:** [The Movie Database (TMDB) API](https://www.themoviedb.org/documentation/api), [LUMEX API](https://portal.lumex.host)
+*   **Деплой:** [Vercel](https://vercel.com/) (или другая платформа, если используете)
 
-To learn more about Next.js, take a look at the following resources:
+## 📦 Установка и запуск
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Хотите запустить проект локально? Следуйте этим шагам:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1.  Клонируйте репозиторий:
+    ```bash
+    git clone https://github.com/jskda/moviecon.git
+    cd moviecon
+    ```
+2.  Установите зависимости:
+    ```bash
+    npm install
+    # или
+    yarn install
+    ```
+3.  Получите бесплатные API-ключи на [The Movie Database (TMDB)](https://www.themoviedb.org/settings/api) и [LUMEX](https://portal.lumex.host/user).
+4.  Создайте файл `.env.local` в корне проекта и добавьте ваши ключи:
+    ```env
+    NEXT_PUBLIC_TMDB_API_KEY=your_api_key_here
+    NEXT_PUBLIC_LUMEX_API_KEY=your_api_key_here
+    ```
+5.  Запустите development-сервер:
+    ```bash
+    npm run dev
+    # или
+    yarn dev
+    ```
+6.  Откройте [http://localhost:3000](http://localhost:3000) в вашем браузере.
 
-## Deploy on Vercel
+## 🎯 Чему я научился / Что применил
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Работа над этим проектом еще не закончена, но позволила мне закрепить и углубить понимание ключевых концепций:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+*   **Маршрутизация в Next.js 14:** Использование новой App Router и структуры папок.
+*   **Серверные компоненты (RSC):** Повышение производительности за счет рендеринга на стороне сервера.
+*   **Работа с внешним API:** Асинхронные запросы к TMDB API, обработка и отображение данных.
+*   **Адаптивный дизайн:** Создание интерфейса, который великолепно выглядит на любом устройстве с помощью Tailwind CSS.
+*   **Оптимизация:** Использование современных практик для повышения скорости загрузки и отзывчивости.
+
+## 🔮 Планы по доработке
+
+Проект в активной разработке! В планах:
+*   [ ] Добавление системы авторизации и избранного (Favorites)
+*   [ ] Регистрация пользователя
+*   [ ] Фильтрация и сортировка фильмов
+*   [ ] Отзывы о просмотренных фильмах
+*   [ ] Пакет рекомендаций (Similar Movies)
+*   [ ] Интеграция с более мощным стейт-менеджером (Zustand)
+*   [ ] Применение TypeScript со строгой типизацей для повышения надежности и удобства разработки
