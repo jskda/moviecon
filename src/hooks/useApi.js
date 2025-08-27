@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
-import { movieApi } from '@/utils/api'
+import { movieLocalApi as movieApi } from '@/utils/apiLocal'
+
 
 export const useMovie = (id) => {
   return useQuery({

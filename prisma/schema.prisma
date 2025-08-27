@@ -1,0 +1,28 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Content {
+  id            Int      @id
+  type          String   // вместо enum: "MOVIE" | "TV_SERIES" | "ANIME"
+  title         String?
+  ru_title      String?
+  description   String?
+  year          Int?
+  released      String?
+  poster        String?
+  backdrop      String?
+  kinopoisk_id  Int?     
+  imdb_id       String?  
+  rating        Float?
+
+  raw           String?  // будем сохранять JSON как строку
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
