@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useSearchParams } from 'next/navigation'
-import { Filter, Grid, List } from 'lucide-react'
+import { Filter, Grid, List, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useMovies } from '@/hooks/useApi'
 import MovieCard from '@/components/MovieCard'
 import LoadingSpinner from '@/components/LoadingSpinner'
@@ -13,20 +13,52 @@ export default function MoviesPage() {
   const [filters, setFilters] = useState({
     ordering: searchParams.get('sort') || 'created',
     direction: 'desc',
-    limit: 20,
+    limit: 18,
     page: 1
   })
 
   const { data, isLoading, error } = useMovies(filters)
+
+  const handlePageChange = (newPage) => {
+    setFilters(prev => ({ ...prev, page: newPage }))
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
 
   if (isLoading) {
     return <LoadingSpinner />
   }
 
   const movies = data?.data || []
+  const totalItems = data?.totalCount || data?.total || 0
+  const totalPages = data?.totalPages || Math.ceil(totalItems / filters.limit) || 1
+  const currentPage = filters.page
 
-  console.log('Movies page data:', data)
-  console.log('Movies page error:', error)
+  // Генерируем номера страниц для отображения
+  const getVisiblePages = () => {
+    const pages = []
+    const showPages = 2 // Количество страниц до и после текущей
+
+    // Всегда добавляем текущую страницу
+    pages.push(currentPage)
+
+    // Добавляем предыдущие страницы
+    for (let i = 1; i <= showPages; i++) {
+      if (currentPage - i >= 1) {
+        pages.unshift(currentPage - i)
+      }
+    }
+
+    // Добавляем следующие страницы
+    for (let i = 1; i <= showPages; i++) {
+      if (currentPage + i <= totalPages) {
+        pages.push(currentPage + i)
+      }
+    }
+
+    return pages
+  }
+
+  const visiblePages = getVisiblePages()
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -56,14 +88,54 @@ export default function MoviesPage() {
       </div>
 
       {movies.length > 0 ? (
-        <div className={viewMode === 'grid' 
-          ? "grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4" 
-          : "space-y-4"
-        }>
-          {movies.map((movie) => (
-            <MovieCard key={movie.id} movie={movie} viewMode={viewMode} />
-          ))}
-        </div>
+        <>
+          <div className={viewMode === 'grid' 
+            ? "grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 mb-8" 
+            : "space-y-4 mb-8"
+          }>
+            {movies.map((movie) => (
+              <MovieCard key={movie.id} movie={movie} viewMode={viewMode} />
+            ))}
+          </div>
+
+          {/* Пагинация */}
+          <div className="flex justify-center items-center space-x-2 mt-8">
+            {/* Кнопка назад */}
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage <= 1}
+              className="p-2 bg-gray-800 rounded-lg hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <ChevronLeft className="h-5 w-5" />
+            </button>
+
+            {/* Номера страниц */}
+            <div className="flex items-center space-x-1">
+              {visiblePages.map((pageNum) => (
+                <button
+                  key={`page-${pageNum}`}
+                  onClick={() => handlePageChange(pageNum)}
+                  className={`w-10 h-10 rounded-lg ${
+                    currentPage === pageNum
+                      ? 'bg-red-600 text-white'
+                      : 'bg-gray-800 hover:bg-gray-700'
+                  }`}
+                >
+                  {pageNum}
+                </button>
+              ))}
+            </div>
+
+            {/* Кнопка вперед */}
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage >= totalPages}
+              className="p-2 bg-gray-800 rounded-lg hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <ChevronRight className="h-5 w-5" />
+            </button>
+          </div>
+        </>
       ) : (
         <div className="text-center py-12">
           <p className="text-gray-400 text-lg">Фильмы не найдены</p>

@@ -9,9 +9,10 @@ generator client {
 
 model Content {
   id            Int      @id
-  type          String   // вместо enum: "MOVIE" | "TV_SERIES" | "ANIME"
+  type          String
   title         String?
   ru_title      String?
+  orig_title    String?  // Добавьте это поле
   description   String?
   year          Int?
   released      String?
@@ -20,9 +21,10 @@ model Content {
   kinopoisk_id  Int?     
   imdb_id       String?  
   rating        Float?
+  iframe_src    String?  // Добавьте это поле
 
-  raw           String?  // будем сохранять JSON как строку
-
+  raw           String?
+  
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }

@@ -1,74 +1,38 @@
 import { useQuery } from '@tanstack/react-query'
-import { movieLocalApi as movieApi } from '@/utils/apiLocal'
 
+const API_BASE = '/api/db'
 
 export const useMovie = (id) => {
   return useQuery({
     queryKey: ['movie', id],
     queryFn: async () => {
-      console.log('Fetching movie with identifier:', id)
-      
-      // Пробуем разные методы поиска
-      try {
-        // 1. Пробуем найти по ID (основной метод)
-        try {
-          const movie = await movieApi.getMovie(id)
-          if (movie && movie.id) {
-            console.log('Found by ID:', movie)
-            return movie
-          }
-        } catch (error) {
-          console.log('Not found by ID')
-        }
-        
-        // 2. Пробуем найти по kinopoisk_id
-        try {
-          const movie = await movieApi.getMovieByKinopoiskId(id)
-          if (movie && movie.id) {
-            console.log('Found by Kinopoisk ID:', movie)
-            return movie
-          }
-        } catch (error) {
-          console.log('Not found by Kinopoisk ID')
-        }
-        
-        // 3. Пробуем найти по imdb_id
-        try {
-          const movie = await movieApi.getMovieByImdbId(id)
-          if (movie && movie.id) {
-            console.log('Found by IMDB ID:', movie)
-            return movie
-          }
-        } catch (error) {
-          console.log('Not found by IMDB ID')
-        }
-        
-        // 4. Пробуем поиск по query (названию или другому тексту)
-        try {
-          const searchResults = await movieApi.searchMovies(id)
-          if (searchResults.data && searchResults.data.length > 0) {
-            console.log('Found by search:', searchResults.data[0])
-            return searchResults.data[0]
-          }
-        } catch (error) {
-          console.log('Not found by search')
-        }
-        
-        throw new Error(`Movie with identifier ${id} not found`)
-      } catch (error) {
-        console.error('All search methods failed:', error)
-        throw error
+      const response = await fetch(`${API_BASE}/movies/${id}`)
+      if (!response.ok) {
+        throw new Error(`Movie not found: ${response.status}`)
       }
+      const movie = await response.json()
+      return movie
     },
     enabled: !!id,
-    staleTime: 10 * 60 * 1000,
   })
 }
 
 export const useMovies = (params = {}) => {
   return useQuery({
     queryKey: ['movies', params],
-    queryFn: () => movieApi.getMovies(params),
+    queryFn: async () => {
+      const queryParams = new URLSearchParams()
+      queryParams.set('limit', params.limit || 20)
+      queryParams.set('page', params.page || 1)
+      queryParams.set('ordering', params.ordering || 'created')
+      queryParams.set('direction', params.direction || 'desc')
+      const response = await fetch(`${API_BASE}/movies?${queryParams}`)
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`)
+      }
+      const data = await response.json()
+      return data
+    },
     staleTime: 5 * 60 * 1000,
   })
 }
@@ -76,7 +40,14 @@ export const useMovies = (params = {}) => {
 export const useSearchMovies = (query) => {
   return useQuery({
     queryKey: ['search-movies', query],
-    queryFn: () => movieApi.searchMovies(query),
+    queryFn: async () => {
+      const response = await fetch(`${API_BASE}/movies?q=${encodeURIComponent(query)}`)
+      if (!response.ok) {
+        throw new Error(`Search error: ${response.status}`)
+      }
+      const data = await response.json()
+      return data
+    },
     enabled: !!query && query.length > 2,
     staleTime: 5 * 60 * 1000,
   })

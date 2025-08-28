@@ -4,22 +4,12 @@ import { useState } from 'react'
 
 export default function Player({ 
   contentId, 
-  contentType = 'movie', 
-  translationId 
+  contentType = 'movie'
 }) {
   const [isLoading, setIsLoading] = useState(true)
   
   const getPlayerUrl = () => {
-    // Базовый URL плеера Lumex
-    let url = `https://p.lumex.space/xgMZ05A06DRi/${contentType}/${contentId}`
-    
-    // Добавляем параметры перевода
-    if (translationId) {
-      url += `?translation=${translationId}`
-    }
-    
-    console.log('Player URL:', url)
-    return url
+    return `https://p.lumex.space/xgMZ05A06DRi/${contentType}/${contentId}`
   }
 
   return (

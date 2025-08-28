@@ -35,7 +35,7 @@ export default function ContentDetailPage() {
 
   return (
     <div className="min-h-screen bg-gray-900">
-      {/* Hero Section */}
+      {/* Hero Section with Backdrop */}
       <div 
         className="relative h-96 bg-cover bg-center"
         style={{

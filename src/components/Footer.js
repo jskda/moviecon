@@ -7,19 +7,19 @@ export default function Footer() {
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row justify-between items-center">
           <div className="flex items-center space-x-2 mb-4 md:mb-0">
-            <Film className="h-6 w-6 text-red-600" />
+            <Film className="h-6 w-6 text-red-800" />
             <span className="text-lg font-bold">MovieCon</span>
           </div>
           
           <div className="flex space-x-6 mb-4 md:mb-0">
-            <Link href="/about" className="hover:text-red-500 transition-colors">
+            <Link href="/about" className="hover:text-red-800 transition-colors">
               О нас
             </Link>
-            <Link href="/contact" className="hover:text-red-500 transition-colors">
+            <Link href="/contact" className="hover:text-red-800 transition-colors">
               Контакты
             </Link>
-            <Link href="/privacy" className="hover:text-red-500 transition-colors">
-              Политика
+            <Link href="/privacy" className="hover:text-red-800 transition-colors">
+              Политика конфиденциальности
             </Link>
           </div>
           
