@@ -5,7 +5,7 @@
   
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "bash vercel-build.sh",
     "start": "next start",
     "lint": "eslint",
     "clean": "rd /s /q .next && rd /s /q node_modules",

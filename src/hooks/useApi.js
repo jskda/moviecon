@@ -37,6 +37,22 @@ export const useMovies = (params = {}) => {
   })
 }
 
+export const useAnimes = (params = {}) => {
+  return useQuery({
+    queryKey: ['animes', params],
+    queryFn: () => movieLocalApi.getMovies({ ...params, type: 'ANIME' }),
+    staleTime: 5 * 60 * 1000,
+  })
+}
+
+export const useTvSeries = (params = {}) => {
+  return useQuery({
+    queryKey: ['tv-series', params],
+    queryFn: () => movieLocalApi.getMovies({ ...params, type: 'TV_SERIES' }),
+    staleTime: 5 * 60 * 1000,
+  })
+}
+
 export const useSearchMovies = (query) => {
   return useQuery({
     queryKey: ['search-movies', query],
