@@ -13,6 +13,7 @@ export default function RootLayout({ children }) {
       <head>
         <title>MovieCon - Фильмы и сериалы</title>
         <meta name="description" content="Смотрите лучшие фильмы и сериалы" />
+        <link rel="icon" href="/favicon.svg" />
       </head>
       <body className="bg-black text-white">
         <QueryClientProvider client={queryClient}>

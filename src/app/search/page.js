@@ -38,9 +38,7 @@ export default function SearchPage() {
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">Результаты поиска</h1>
         {query && (
-          <p className="text-gray-400">
-            По запросу: <span className="text-accent">"{query}"</span>
-          </p>
+          <p className="text-gray-400">По запросу: <span className="text-accent">&quot;{query}&quot;</span></p>
         )}
       </div>
 

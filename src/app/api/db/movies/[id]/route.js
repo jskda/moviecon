@@ -5,21 +5,22 @@ const prisma = new PrismaClient()
 
 export async function GET(_req, { params }) {
   try {
-    const id = Number(params.id)
-    console.log('🔍 Fetching movie ID:', id)
+    const { id } = await params
+    const movieId = Number(id)
     
+    console.log('🔍 Fetching movie ID:', movieId)
+
     const movie = await prisma.content.findUnique({ 
-      where: { id }
+      where: { id: movieId }
     })
     
     if (!movie) {
-      console.log('❌ Movie not found:', id)
+      console.log('❌ Movie not found:', movieId)
       return Response.json({ error: 'Movie not found' }, { status: 404 })
     }
     
     console.log('✅ Movie found:', movie.ru_title)
     
-    // Парсим данные из raw поля
     const parsedMovie = parseRawData(movie)
     
     return Response.json(parsedMovie)

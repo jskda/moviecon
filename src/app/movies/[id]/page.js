@@ -6,6 +6,7 @@ import Player from '@/components/Player'
 import LoadingSpinner from '@/components/LoadingSpinner'
 import { getPosterUrl, getBackdropUrl } from '@/utils/images'
 import { Star, Calendar } from 'lucide-react'
+import Image from 'next/image'
 
 export default function ContentDetailPage() {
   const params = useParams()
@@ -108,7 +109,7 @@ export default function ContentDetailPage() {
 
             <div className="bg-gray-800 rounded-lg p-6">
               <h2 className="text-2xl font-bold mb-4">Постер</h2>
-              <img
+              <Image
                 src={getPosterUrl(content)}
                 alt={content.ru_title || content.title}
                 className="w-full rounded-lg"

@@ -31,9 +31,7 @@ export default function SearchResults({ searchQuery }) {
 
   return (
     <div className="container mx-auto px-4">
-      <h2 className="text-2xl md:text-3xl font-bold mb-6">
-        Результаты поиска: "{searchQuery}"
-      </h2>
+      <h2 className="text-2xl md:text-3xl font-bold mb-6">Результаты поиска: &quot;{searchQuery}&quot;</h2>
       
       {movies.length > 0 ? (
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">

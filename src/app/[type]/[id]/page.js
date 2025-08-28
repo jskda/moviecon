@@ -6,6 +6,7 @@ import Player from '@/components/Player'
 import LoadingSpinner from '@/components/LoadingSpinner'
 import { getPosterUrl, getBackdropUrl } from '@/utils/images'
 import { Star, Calendar } from 'lucide-react'
+import Image from 'next/image'
 
 export default function ContentDetailPage() {
   const params = useParams()
