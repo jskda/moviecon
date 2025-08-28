@@ -68,3 +68,5 @@ export const useSearchMovies = (query) => {
     staleTime: 5 * 60 * 1000,
   })
 }
+
+export { useMovie, useMovies, useSearchMovies }
