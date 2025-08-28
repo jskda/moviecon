@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useSearchParams } from 'next/navigation'
+// import { useSearchParams } from 'next/navigation'
 import { Filter, Grid, List } from 'lucide-react'
 import { useTvSeries } from '@/hooks/useApi'
 import MovieCard from '@/components/MovieCard'
@@ -11,13 +11,27 @@ export default function TvSeriesPage() {
   const searchParams = useSearchParams()
   const [viewMode, setViewMode] = useState('grid')
   const [filters, setFilters] = useState({
-    ordering: searchParams.get('sort') || 'created',
+    // ordering: searchParams.get('sort') || 'created',
+    ordering: 'created',
     direction: 'desc',
     limit: 20,
     page: 1
   })
 
-  const { data, isLoading } = useTvSeries(filters)
+  // const { data, isLoading } = useTvSeries(filters)
+
+  // if (isLoading) {
+  //   return <LoadingSpinner />
+  // }
+
+  // const tvSeries = data?.data || []
+
+  // return (
+  //   <div className="container mx-auto px-4 py-8">
+  const { data, isLoading } = useTvSeries({ 
+    ...filters, 
+    type: 'TV-SERIES' 
+  })
 
   if (isLoading) {
     return <LoadingSpinner />

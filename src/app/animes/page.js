@@ -1,23 +1,27 @@
 'use client'
 
 import { useState } from 'react'
-import { useSearchParams } from 'next/navigation'
+// import { useSearchParams } from 'next/navigation'
 import { Filter, Grid, List } from 'lucide-react'
 import { useAnimes } from '@/hooks/useApi'
 import MovieCard from '@/components/MovieCard'
 import LoadingSpinner from '@/components/LoadingSpinner'
 
 export default function AnimesPage() {
-  const searchParams = useSearchParams()
+  // const searchParams = useSearchParams()
   const [viewMode, setViewMode] = useState('grid')
   const [filters, setFilters] = useState({
-    ordering: searchParams.get('sort') || 'created',
+    // ordering: searchParams.get('sort') || 'created',
+    ordering: 'created',
     direction: 'desc',
     limit: 20,
     page: 1
   })
 
-  const { data, isLoading } = useAnimes(filters)
+  const { data, isLoading } = useMovies({ 
+    ...filters, 
+    type: 'ANIME' 
+  })
 
   if (isLoading) {
     return <LoadingSpinner />
