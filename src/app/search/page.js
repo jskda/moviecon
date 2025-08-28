@@ -1,13 +1,14 @@
 'use client'
 
 import { useSearchParams } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { Search } from 'lucide-react'
 import { movieApi } from '@/utils/api'
 import MovieCard from '@/components/MovieCard'
 import LoadingSpinner from '@/components/LoadingSpinner'
 
-export default function SearchPage() {
+// Выносим основной контент в отдельный компонент
+function SearchContent() {
   const searchParams = useSearchParams()
   const query = searchParams.get('q')
   const [results, setResults] = useState([])
@@ -38,7 +39,9 @@ export default function SearchPage() {
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">Результаты поиска</h1>
         {query && (
-          <p className="text-gray-400">По запросу: <span className="text-accent">&quot;{query}&quot;</span></p>
+          <p className="text-gray-400">
+            По запросу: <span className="text-accent">&quot;{query}&quot;</span>
+          </p>
         )}
       </div>
 
@@ -57,5 +60,14 @@ export default function SearchPage() {
         </div>
       )}
     </div>
+  )
+}
+
+// Основной компонент страницы с Suspense
+export default function SearchPage() {
+  return (
+    <Suspense fallback={<LoadingSpinner />}>
+      <SearchContent />
+    </Suspense>
   )
 }
