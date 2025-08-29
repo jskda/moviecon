@@ -67,7 +67,7 @@ export const useMovie = (id) => {
     },
     enabled: !!id,
   })
-}}
+}
 
 export const useAnimes = (params = {}) => {
   return useQuery({
