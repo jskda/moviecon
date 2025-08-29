@@ -1,6 +1,6 @@
 // src/app/api/sync/route.js
 import { NextResponse } from 'next/server'
-import { incrementalSync } from '@/lib/sync-optimized'
+import { incrementalSync } from 'lib/sync-optimized'
 
 const SYNC_SECRET = process.env.SYNC_SECRET
 
