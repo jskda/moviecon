@@ -1,22 +1,21 @@
 import { useQuery } from '@tanstack/react-query'
-import prisma from '@/lib/prisma'
 
 const API_BASE = '/api/db'
 
-export const useMovie = (id) => {
-  return useQuery({
-    queryKey: ['movie', id],
-    queryFn: async () => {
-      const response = await fetch(`${API_BASE}/movies/${id}`)
-      if (!response.ok) {
-        throw new Error(`Movie not found: ${response.status}`)
-      }
-      const movie = await response.json()
-      return movie
-    },
-    enabled: !!id,
-  })
-}
+// export const useMovie = (id) => {
+//   return useQuery({
+//     queryKey: ['movie', id],
+//     queryFn: async () => {
+//       const response = await fetch(`${API_BASE}/movies/${id}`)
+//       if (!response.ok) {
+//         throw new Error(`Movie not found: ${response.status}`)
+//       }
+//       const movie = await response.json()
+//       return movie
+//     },
+//     enabled: !!id,
+//   })
+// }
 
 // export const useMovies = (params = {}) => {
 //   return useQuery({
@@ -42,24 +41,33 @@ export const useMovies = (params = {}) => {
   return useQuery({
     queryKey: ['movies', params],
     queryFn: async () => {
-      const movies = await prisma.content.findMany({
-        take: params.limit || 20,
-        skip: params.page ? (params.page - 1) * (params.limit || 20) : 0,
-        orderBy: { createdAt: 'desc' }
-      })
+      // Делаем запрос к нашему API, а не напрямую к базе
+      const queryParams = new URLSearchParams(params)
+      const response = await fetch(`/api/movies?${queryParams}`)
       
-      const total = await prisma.content.count()
-      
-      return {
-        data: movies,
-        total,
-        page: params.page || 1,
-        pages: Math.ceil(total / (params.limit || 20))
+      if (!response.ok) {
+        throw new Error('API error')
       }
+      
+      return response.json()
     },
     staleTime: 5 * 60 * 1000,
   })
 }
+
+export const useMovie = (id) => {
+  return useQuery({
+    queryKey: ['movie', id],
+    queryFn: async () => {
+      const response = await fetch(`/api/movies/${id}`)
+      if (!response.ok) {
+        throw new Error('Movie not found')
+      }
+      return response.json()
+    },
+    enabled: !!id,
+  })
+}}
 
 export const useAnimes = (params = {}) => {
   return useQuery({
