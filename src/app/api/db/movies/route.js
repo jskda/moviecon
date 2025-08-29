@@ -6,11 +6,14 @@ export async function GET(request) {
   try {
     console.log('🎬 API Movies Request received')
     
+    const { searchParams } = new URL(request.url)
+    const limit = Math.min(parseInt(searchParams.get('limit') || '5'), 20)
+    
     const prisma = new PrismaClient().$extends(withAccelerate())
     console.log('✅ Prisma client connected')
     
     const movies = await prisma.content.findMany({
-      take: 6,
+      take: limit,
       orderBy: { createdAt: 'desc' }
     })
     
