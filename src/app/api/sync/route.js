@@ -17,7 +17,7 @@ export async function GET(request) {
     const prisma = new PrismaClient().$extends(withAccelerate())
     const API_URL = 'https://portal.lumex.host/api'
     const API_TOKEN = 'mCSbTETUoTFAUzpOBa4Cx156dGkVHK5F'
-    const PAGE_SIZE = 100
+    const PAGE_SIZE = 20
 
     console.log('🔄 Starting full synchronization...')
     
