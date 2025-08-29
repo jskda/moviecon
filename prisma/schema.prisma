@@ -1,10 +1,11 @@
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider     = "postgresql"
+  url          = env("DATABASE_URL")
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["clientExtensions"]
 }
 
 model Content {
@@ -12,7 +13,7 @@ model Content {
   type          String
   title         String?
   ru_title      String?
-  orig_title    String?  // Добавьте это поле
+  orig_title    String?
   description   String?
   year          Int?
   released      String?
@@ -21,10 +22,11 @@ model Content {
   kinopoisk_id  Int?     
   imdb_id       String?  
   rating        Float?
-  iframe_src    String?  // Добавьте это поле
-
+  iframe_src    String?
   raw           String?
   
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+
+  @@map("content")
 }

@@ -1,3 +1,6 @@
+import prisma from '@/lib/prisma'
+
+
 const fetch = require("node-fetch");
 const { PrismaClient } = require("@prisma/client");
 
