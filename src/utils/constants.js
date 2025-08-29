@@ -10,7 +10,7 @@ export const SORT_OPTIONS = [
   { value: 'created', label: 'По дате добавления' },
   { value: 'rating', label: 'По рейтингу' },
   { value: 'title', label: 'По названию' },
-  { value: 'year', label: 'По году' }
+  { value: 'release', label: 'По году' }
 ]
 
 export const QUALITY_OPTIONS = [

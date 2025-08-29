@@ -1,7 +1,11 @@
 {
-  "functions": {
-    "src/app/api/sync/route.js": {
-      "maxDuration": 30
-    }
-  }
+    "functions": {
+        "src/app/api/sync/route.js": {
+            "maxDuration": 30
+        }
+    },
+    "crons": [{
+        "path": "/scripts/sync-daily",
+            "schedule": "0 10 * * *"
+        }]
 }

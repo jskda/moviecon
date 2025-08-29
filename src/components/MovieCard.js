@@ -40,7 +40,7 @@ export default function MovieCard({ movie, viewMode = 'grid' }) {
             <div className="flex items-center space-x-4 text-sm text-gray-400">
               <div className="flex items-center space-x-1">
                 <Calendar className="h-3 w-3" />
-                <span>{getYear(movie.year || movie.released)}</span>
+                <span>{getYear(movie.released)}</span>
               </div>
               <div className="flex items-center space-x-1">
                 <Star className="h-3 w-3 text-yellow-400" />
@@ -77,7 +77,7 @@ export default function MovieCard({ movie, viewMode = 'grid' }) {
           <div className="flex items-center justify-between text-xs text-gray-400">
             <div className="flex items-center space-x-1">
               <Calendar className="h-3 w-3" />
-              <span>{getYear(movie.year || movie.released)}</span>
+              <span>{getYear(movie.released)}</span>
             </div>
             
             <div className="flex items-center space-x-1">

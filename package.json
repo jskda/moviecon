@@ -1,16 +1,16 @@
 {
   "name": "moviecon",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
+  
   "scripts": {
     "dev": "next dev",
     "build": "prisma generate && next build",
     "start": "next start",
-    "lint": "eslint",
-    "clean": "rd /s /q .next && rd /s /q node_modules",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev --name init",
-    "sync": "node scripts/sync.js"
+    "sync:daily": "node scripts/sync-daily.js",
+    "sync:all": "node scripts/sync.js"
   },
   "dependencies": {
     "@prisma/client": "^6.15.0",

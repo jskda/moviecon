@@ -1,4 +1,4 @@
-// scripts/sync-full.js
+// scripts/sync-incremental.js
 const { PrismaClient } = require('@prisma/client/edge');
 const { withAccelerate } = require('@prisma/extension-accelerate');
 
@@ -6,9 +6,9 @@ const prisma = new PrismaClient().$extends(withAccelerate());
 const API_URL = 'https://portal.lumex.host/api';
 const API_TOKEN = 'mCSbTETUoTFAUzpOBa4Cx156dGkVHK5F';
 const PAGE_SIZE = 100;
-const CONCURRENT_PAGES = 5;
-const BATCH_SIZE = 20;
-const DELAY_BETWEEN_PAGES = 100;
+const CONCURRENT_PAGES = 3; // Меньше для инкрементальной
+const BATCH_SIZE = 15;
+const DELAY_BETWEEN_PAGES = 150;
 
 async function fetchPage(page) {
   const url = `${API_URL}/movies?api_token=${API_TOKEN}&page=${page}&perPage=${PAGE_SIZE}`;
@@ -43,6 +43,7 @@ async function processBatch(items) {
         rating: item.rating,
         iframe_src: item.iframe_src,
         raw: JSON.stringify(item),
+        updatedAt: new Date()
       },
       create: {
         id: item.id,
@@ -55,8 +56,8 @@ async function processBatch(items) {
         imdb_id: item.imdb_id,
         rating: item.rating,
         iframe_src: item.iframe_src,
-        raw: JSON.stringify(item),
-      },
+        raw: JSON.stringify(item)
+      }
     })
   );
 
@@ -67,16 +68,14 @@ async function processBatch(items) {
   return { successful, failed };
 }
 
-async function fullSync() {
+async function incrementalSync() {
   try {
-    console.log('🚀 Starting FULL synchronization...');
+    console.log('🚀 Starting INCREMENTAL synchronization...');
     console.log(`⚡ Configuration: ${CONCURRENT_PAGES} concurrent pages, ${BATCH_SIZE} batch size`);
-    
-    console.log('🧹 Clearing existing data...');
-    await prisma.content.deleteMany({});
     
     let page = 1;
     let totalAdded = 0;
+    let totalUpdated = 0;
     let totalErrors = 0;
     let hasMore = true;
 
@@ -118,6 +117,7 @@ async function fullSync() {
       console.log(`⚡ Processing ${allItems.length} items in batches of ${BATCH_SIZE}...`);
       
       let batchAdded = 0;
+      let batchUpdated = 0;
       let batchErrors = 0;
 
       for (let i = 0; i < allItems.length; i += BATCH_SIZE) {
@@ -126,13 +126,13 @@ async function fullSync() {
         batchAdded += batchResult.successful;
         batchErrors += batchResult.failed;
         
-        console.log(`🔄 Batch ${Math.floor(i/BATCH_SIZE) + 1}: ${batchResult.successful} added, ${batchResult.failed} errors`);
+        console.log(`🔄 Batch ${Math.floor(i/BATCH_SIZE) + 1}: ${batchResult.successful} processed, ${batchResult.failed} errors`);
       }
 
       totalAdded += batchAdded;
       totalErrors += batchErrors;
       
-      console.log(`✔️ Pages ${page}-${page + pagesProcessed - 1}: Added ${batchAdded}, Errors: ${batchErrors}`);
+      console.log(`✔️ Pages ${page}-${page + pagesProcessed - 1}: Processed ${batchAdded}, Errors: ${batchErrors}`);
 
       page += CONCURRENT_PAGES;
 
@@ -140,24 +140,25 @@ async function fullSync() {
         await new Promise(resolve => setTimeout(resolve, DELAY_BETWEEN_PAGES));
       }
       
-      if (page > 5000) {
-        console.log("⚠️  Safety limit reached (5000 pages)");
+      if (page > 1000) {
+        console.log("⚠️  Safety limit reached (1000 pages)");
         hasMore = false;
       }
     }
 
-    console.log(`\n🎉 Full sync completed!`);
+    console.log(`\n🎉 Incremental sync completed!`);
     console.log(`📊 Total records processed: ${totalAdded}`);
     console.log(`❌ Total errors: ${totalErrors}`);
     
     return { 
       success: true, 
-      total: totalAdded,
-      errors: totalErrors
+      added: totalAdded,
+      errors: totalErrors,
+      message: `Processed ${totalAdded} records with ${totalErrors} errors`
     };
     
   } catch (error) {
-    console.error('❌ Full sync failed:', error);
+    console.error('❌ Incremental sync failed:', error);
     throw error;
   } finally {
     await prisma.$disconnect();
@@ -165,10 +166,10 @@ async function fullSync() {
 }
 
 // Запуск
-fullSync()
+incrementalSync()
   .then((result) => {
     console.log('✅ Sync completed successfully!');
-    console.log(`📋 Total: ${result.total} records, Errors: ${result.errors}`);
+    console.log(`📋 ${result.message}`);
     process.exit(0);
   })
   .catch((error) => {

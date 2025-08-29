@@ -79,13 +79,13 @@ export default function ContentDetailPage() {
               <div className="space-y-3">
                 <div className="flex justify-between">
                   <span className="text-gray-400">Год:</span>
-                  <span>{getYear(content.year || content.released)}</span>
+                  <span>{getYear(content.released)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-400">Рейтинг:</span>
                   <span className="flex items-center">
                     <Star className="h-4 w-4 text-yellow-400 mr-1" />
-                    {content.rating || 'N/A'}/10
+                    {content.rating || '5'}/10
                   </span>
                 </div>
                 {content.kinopoisk_id && (

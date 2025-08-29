@@ -1,32 +1,31 @@
-datasource db {
-  provider     = "postgresql"
-  url          = env("DATABASE_URL")
-}
-
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["clientExtensions"]
 }
 
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
 model Content {
-  id            Int      @id
-  type          String
-  title         String?
-  ru_title      String?
-  orig_title    String?
-  description   String?
-  year          Int?
-  released      String?
-  poster        String?
-  backdrop      String?
-  kinopoisk_id  Int?     
-  imdb_id       String?  
-  rating        Float?
-  iframe_src    String?
-  raw           String?
-  
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id           Int      @id
+  type         String
+  title        String?
+  ru_title     String?
+  orig_title   String?
+  description  String?
+  year         Int?
+  released     String?
+  poster       String?
+  backdrop     String?
+  kinopoisk_id Int?
+  imdb_id      String?
+  rating       Float?
+  iframe_src   String?
+  raw          String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   @@map("content")
 }
