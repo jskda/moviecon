@@ -7,7 +7,8 @@ export async function GET(request) {
     const { searchParams } = new URL(request.url)
     const limit = Math.min(parseInt(searchParams.get('limit') || '20'), 100)
     const page = parseInt(searchParams.get('page') || '1')
-    const ordering = (searchParams.get('ordering') || 'createdAt')
+        
+    const ordering = 'id' // 'year', 'rating'
     
     const prisma = new PrismaClient().$extends(withAccelerate())
     
