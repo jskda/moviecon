@@ -6,6 +6,7 @@ const SYNC_SECRET = process.env.SYNC_SECRET
 
 export async function GET(request) {
   try {
+    // Проверяем секретный ключ
     const { searchParams } = new URL(request.url)
     const secret = searchParams.get('secret')
     
@@ -16,7 +17,7 @@ export async function GET(request) {
     const prisma = new PrismaClient().$extends(withAccelerate())
     const API_URL = 'https://portal.lumex.host/api'
     const API_TOKEN = 'mCSbTETUoTFAUzpOBa4Cx156dGkVHK5F'
-    const PAGE_SIZE = 20
+    const PAGE_SIZE = 100
 
     console.log('🔄 Starting full synchronization...')
     
@@ -24,7 +25,7 @@ export async function GET(request) {
     let totalAdded = 0
     let hasMore = true
 
-    while (hasMore && page <= 20) { // Ограничим 100 страницами на всякий случай
+    while (hasMore && page <= 100) { // Ограничим 100 страницами на всякий случай
       console.log(`📥 Processing page ${page}...`)
       
       const response = await fetch(
@@ -75,6 +76,7 @@ export async function GET(request) {
         }
       }
 
+      // Если на странице меньше элементов, значит это последняя страница
       if (data.data.length < PAGE_SIZE) {
         hasMore = false
       }

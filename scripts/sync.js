@@ -4,7 +4,7 @@ import { withAccelerate } from '@prisma/extension-accelerate'
 const prisma = new PrismaClient().$extends(withAccelerate())
 const API_URL = 'https://portal.lumex.host/api'
 const API_TOKEN = 'mCSbTETUoTFAUzpOBa4Cx156dGkVHK5F'
-const PAGE_SIZE = 20
+const PAGE_SIZE = 100 // Максимальное количество на странице
 
 async function fetchPage(page) {
   const url = `${API_URL}/movies?api_token=${API_TOKEN}&page=${page}&perPage=${PAGE_SIZE}`
