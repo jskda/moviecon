@@ -30,3 +30,12 @@ model Content {
 
   @@map("content")
 }
+
+model SyncLog {
+  id          Int      @id @default(autoincrement())
+  type        String   // 'full' или 'incremental'
+  itemsSynced Int
+  success     Boolean
+  startedAt   DateTime @default(now())
+  completedAt DateTime?
+}
