@@ -41,25 +41,32 @@ export const useMovies = (params = {}) => {
   return useQuery({
     queryKey: ['movies', params],
     queryFn: async () => {
-      // Делаем запрос к нашему API, а не напрямую к базе
-      const queryParams = new URLSearchParams(params)
-      const response = await fetch(`/api/movies?${queryParams}`)
+      const queryParams = new URLSearchParams()
+      queryParams.set('limit', params.limit || 20)
+      queryParams.set('page', params.page || 1)
+      queryParams.set('ordering', params.ordering || 'createdAt')
       
-      if (!response.ok) {
-        throw new Error('API error')
+      const response = await fetch(`${API_BASE}/movies?${queryParams}`)
+      
+      const data = await response.json()
+      
+      if (!response.ok || !data.success) {
+        throw new Error(data.error || 'API error')
       }
       
-      return response.json()
+      return data
     },
     staleTime: 5 * 60 * 1000,
+    retry: 2
   })
 }
+
 
 export const useMovie = (id) => {
   return useQuery({
     queryKey: ['movie', id],
     queryFn: async () => {
-      const response = await fetch(`/api/movies/${id}`)
+      const response = await fetch(`${API_BASE}movies/${id}`)
       if (!response.ok) {
         throw new Error('Movie not found')
       }
