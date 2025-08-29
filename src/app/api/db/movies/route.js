@@ -7,6 +7,7 @@ export async function GET(request) {
     const { searchParams } = new URL(request.url)
     const limit = Math.min(parseInt(searchParams.get('limit') || '20'), 100)
     const page = parseInt(searchParams.get('page') || '1')
+    const ordering = searchParams.get('ordering') || 'createdAt'
     
     const prisma = new PrismaClient().$extends(withAccelerate())
     
@@ -14,7 +15,7 @@ export async function GET(request) {
       prisma.content.findMany({
         take: limit,
         skip: (page - 1) * limit,
-        orderBy: { createdAt: 'desc' }
+        orderBy: { [ordering]: 'desc' }
       }),
       prisma.content.count()
     ])
