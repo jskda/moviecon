@@ -4,31 +4,31 @@ import { withAccelerate } from '@prisma/extension-accelerate'
 
 export async function GET(request) {
   try {
-    console.log('🎬 API Movies Request received')
-    
     const { searchParams } = new URL(request.url)
-    const limit = Math.min(parseInt(searchParams.get('limit') || '5'), 20)
+    const limit = Math.min(parseInt(searchParams.get('limit') || '20'), 100)
+    const page = parseInt(searchParams.get('page') || '1')
     
     const prisma = new PrismaClient().$extends(withAccelerate())
-    console.log('✅ Prisma client connected')
     
-    const movies = await prisma.content.findMany({
-      take: limit,
-      orderBy: { createdAt: 'desc' }
-    })
-    
-    console.log(`✅ Found ${movies.length} movies`)
+    const [movies, total] = await Promise.all([
+      prisma.content.findMany({
+        take: limit,
+        skip: (page - 1) * limit,
+        orderBy: { createdAt: 'desc' }
+      }),
+      prisma.content.count()
+    ])
     
     return NextResponse.json({
       data: movies,
-      total: movies.length,
-      page: 1,
-      pages: 1,
+      total,
+      page,
+      pages: Math.ceil(total / limit),
       success: true
     })
 
   } catch (error) {
-    console.error('❌ Database error:', error.message)
+    console.error('Database error:', error.message)
     return NextResponse.json(
       { 
         error: 'Database error',
