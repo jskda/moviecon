@@ -7,18 +7,20 @@ export async function GET(request) {
     const { searchParams } = new URL(request.url)
     const limit = Math.min(parseInt(searchParams.get('limit') || '20'), 100)
     const page = parseInt(searchParams.get('page') || '1')
-        
     const ordering = 'id' // 'year', 'rating'
+    const type = searchParams.get('type')
     
     const prisma = new PrismaClient().$extends(withAccelerate())
     
+    const where = type ? { type } : {}
     const [movies, total] = await Promise.all([
       prisma.content.findMany({
+        where,
         take: limit,
         skip: (page - 1) * limit,
         orderBy: { [ordering]: 'desc' }
       }),
-      prisma.content.count()
+      prisma.content.count({where})
     ])
     
     return NextResponse.json({
