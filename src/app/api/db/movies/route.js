@@ -6,35 +6,21 @@ export async function GET(request) {
   try {
     console.log('🎬 API Movies Request received')
     
-    const { searchParams } = new URL(request.url)
-    const limit = Math.min(parseInt(searchParams.get('limit') || '20'), 100)
-    const page = parseInt(searchParams.get('page') || '1')
-    const ordering = searchParams.get('ordering') || 'createdAt'
-    const type = searchParams.get('type')
-
     const prisma = new PrismaClient().$extends(withAccelerate())
     console.log('✅ Prisma client connected')
-
-    // Простой where только для type (Accelerate-friendly)
-    const where = type ? { type } : {}
-
-    const [movies, total] = await Promise.all([
-      prisma.content.findMany({
-        where,
-        take: limit,
-        skip: (page - 1) * limit,
-        orderBy: { [ordering]: 'desc' }
-      }),
-      prisma.content.count({ where })
-    ])
-
-    console.log(`✅ Found ${movies.length} movies out of ${total}`)
-
+    
+    const movies = await prisma.content.findMany({
+      take: 6,
+      orderBy: { createdAt: 'desc' }
+    })
+    
+    console.log(`✅ Found ${movies.length} movies`)
+    
     return NextResponse.json({
       data: movies,
-      total,
-      page,
-      pages: Math.ceil(total / limit),
+      total: movies.length,
+      page: 1,
+      pages: 1,
       success: true
     })
 
